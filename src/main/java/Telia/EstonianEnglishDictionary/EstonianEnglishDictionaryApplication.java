@@ -8,6 +8,4 @@ public class EstonianEnglishDictionaryApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EstonianEnglishDictionaryApplication.class, args);
-	}
-
-}
+	}}
