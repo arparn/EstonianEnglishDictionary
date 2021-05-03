@@ -1,0 +1,8 @@
+2021-05-03 17:55:14 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CITY" не найдена
+Table "CITY" not found; SQL statement:
+SELECT * FROM CITY [42102-200]
+2021-05-03 17:55:57 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "CITY" не найдена
+Table "CITY" not found; SQL statement:
+SELECT * FROM City [42102-200]
