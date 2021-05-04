@@ -8,10 +8,10 @@ spring:
         temp:
           use_jdbc_metadata_defaults : false
     hibernate:
-      ddl-auto: create
+      ddl-auto: none # create - create new db, delete old one / none - do not change db
   datasource:
     #    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1 # this one is in memory
-    url: jdbc:h2:./h2/data;AUTO_SERVER=TRUE # this one is on the disk, notice the h2 folder and contents it creates
+    url: jdbc:h2:file:/h2/dictionary;AUTO_SERVER=TRUE # url: jdbc:h2:./h2/dictionary;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE this one is on the disk, notice the h2 folder and contents it creates
     driverClassName: org.h2.Driver
     username: sa
     password: sa
@@ -22,5 +22,5 @@ spring:
   main:
     allow-bean-definition-overriding: true
 #logging:
- # file:
-  #  path: ./logs
+  #file:
+    #path: ./logs
