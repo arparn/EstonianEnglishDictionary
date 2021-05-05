@@ -27,7 +27,18 @@ public class EnglishWordsController {
     }
 
     @GetMapping("/translate")
-    public List<String> getTranslation(@RequestParam(value = "word") String word) {
+    public List<Translation> getTranslation(@RequestParam(value = "word") String word) {
         return englishWordService.translate(word.toLowerCase());
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteWordAndTranslations(@PathVariable Long id) {
+        englishWordService.deleteWordAndTranslations(id);
+    }
+
+    @DeleteMapping("{id}/{translationId}")
+    public void deleteTranslations(@PathVariable Long id,
+                                   @PathVariable Long translationId) {
+        englishWordService.deleteTranslation(id, translationId);
     }
 }

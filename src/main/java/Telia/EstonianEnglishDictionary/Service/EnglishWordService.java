@@ -1,10 +1,8 @@
 package Telia.EstonianEnglishDictionary.Service;
 
 import Telia.EstonianEnglishDictionary.Model.EnglishWord;
-import Telia.EstonianEnglishDictionary.Model.EstonianWord;
 import Telia.EstonianEnglishDictionary.Model.Translation;
 import Telia.EstonianEnglishDictionary.Repository.EnglishWordsRepository;
-import Telia.EstonianEnglishDictionary.Repository.EstonianWordsRepository;
 import Telia.EstonianEnglishDictionary.Repository.TranslationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +40,7 @@ public class EnglishWordService {
                 translationRepository.save(translationObj);
                 enWord.getEquivalents().add(translationObj);
                 englishWordsRepository.save(enWord);
+                estonianWordService.addWord(translation, word);
             }
             return enWord;
         }
@@ -52,13 +51,32 @@ public class EnglishWordService {
         return enWord;
     }
 
-    public List<String> translate(String word) {
+    public List<Translation> translate(String word) {
         List<EnglishWord> similarWords =  englishWordsRepository.findAll()
                 .stream()
                 .filter(x -> x.getWord().equals(word))
                 .collect(Collectors.toList());
-        List<String> translations = new LinkedList<>();
-        similarWords.forEach(w -> w.getEquivalents().forEach(t -> translations.add(t.getWord())));
+        List<Translation> translations = new LinkedList<>();
+        similarWords.forEach(w -> translations.addAll(w.getEquivalents()));
         return translations;
+    }
+
+    public void deleteWordAndTranslations(Long id) {
+        if (englishWordsRepository.findById(id).isPresent()) {
+            englishWordsRepository.deleteById(id);
+        }
+    }
+
+    public void deleteTranslation(Long id, Long translationId) {
+        Optional<EnglishWord> enWordObj = englishWordsRepository.findById(id);
+        Optional<Translation> translationObj = translationRepository.findById(translationId);
+        if (enWordObj.isPresent()) {
+            EnglishWord enWord = enWordObj.get();
+            if (enWord.getEquivalents().size() > 1 && translationObj.isPresent()) {
+                Translation translation = translationObj.get();
+                enWord.getEquivalents().remove(translation);
+                translationRepository.deleteById(translationId);
+            }
+        }
     }
 }
