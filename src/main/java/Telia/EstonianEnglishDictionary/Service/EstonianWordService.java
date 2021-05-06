@@ -17,9 +17,6 @@ import java.util.stream.Collectors;
 public class EstonianWordService {
 
     @Autowired
-    private EnglishWordService englishWordService;
-
-    @Autowired
     private EstonianWordsRepository estonianWordsRepository;
 
     @Autowired
@@ -41,14 +38,12 @@ public class EstonianWordService {
                 translationRepository.save(translationObj);
                 estWord.getEquivalents().add(translationObj);
                 estonianWordsRepository.save(estWord);
-                englishWordService.addWord(translation, word);
             }
             return estWord;
         }
         translationRepository.save(translationObj);
         EstonianWord estWord = new EstonianWord(word, translationObj);
         estonianWordsRepository.save(estWord);
-        englishWordService.addWord(translation, word);
         return estWord;
     }
 
