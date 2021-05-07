@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("estonian-english")
 @RestController
@@ -35,7 +36,7 @@ public class EstonianWordsController {
     }
 
     @GetMapping("/translate")
-    public List<Translation> getTranslation(@RequestParam(value = "word") String word) {
+    public Map<String, Object> getTranslation(@RequestParam(value = "word") String word) {
         return estonianWordService.translate(word.toLowerCase());
     }
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("english-estonian")
 @RestController
@@ -35,7 +36,7 @@ public class EnglishWordsController {
     }
 
     @GetMapping("/translate")
-    public List<EnglishWord> getTranslation(@RequestParam(value = "word") String word) {
+    public Map<String, Object> getTranslation(@RequestParam(value = "word") String word) {
         return englishWordService.translate(word.toLowerCase());
     }
 
@@ -48,11 +49,5 @@ public class EnglishWordsController {
     public void deleteTranslations(@PathVariable Long id,
                                    @PathVariable Long translationId) {
         englishWordService.deleteTranslation(id, translationId);
-    }
-
-    @GetMapping("/Lev")
-    public int getLev(@RequestParam(value = "s1") String s1,
-                                @RequestParam(value = "s2") String s2) {
-        return englishWordService.calculateLevenshtein(s1, s2);
     }
 }
