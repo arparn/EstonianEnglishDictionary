@@ -35,7 +35,7 @@ public class EnglishWordsController {
     }
 
     @GetMapping("/translate")
-    public List<Translation> getTranslation(@RequestParam(value = "word") String word) {
+    public List<EnglishWord> getTranslation(@RequestParam(value = "word") String word) {
         return englishWordService.translate(word.toLowerCase());
     }
 
@@ -48,5 +48,11 @@ public class EnglishWordsController {
     public void deleteTranslations(@PathVariable Long id,
                                    @PathVariable Long translationId) {
         englishWordService.deleteTranslation(id, translationId);
+    }
+
+    @GetMapping("/Lev")
+    public int getLev(@RequestParam(value = "s1") String s1,
+                                @RequestParam(value = "s2") String s2) {
+        return englishWordService.calculateLevenshtein(s1, s2);
     }
 }

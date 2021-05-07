@@ -56,7 +56,7 @@ public class EnglishWordService {
                 .min().orElse(Integer.MAX_VALUE);
     }
 
-    public int calculateLev(String x, String y) {
+    public int calculateLevenshtein(String x, String y) {
         int[][] dp = new int[x.length() + 1][y.length() + 1];
 
         for (int i = 0; i <= x.length(); i++) {
@@ -68,10 +68,9 @@ public class EnglishWordService {
                     dp[i][j] = i;
                 }
                 else {
-                    dp[i][j] = min(dp[i - 1][j - 1]  // if dp[i][j] == dp[i - 1][j - 1] + constOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)) => замена_букв += 1
-                                    + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),
-                            dp[i - 1][j] + 1,
-                            dp[i][j - 1] + 1);
+                    dp[i][j] = min(dp[i - 1][j - 1] + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),
+                                            dp[i - 1][j] + 1,
+                                            dp[i][j - 1] + 1);
                 }
             }
         }
@@ -79,14 +78,14 @@ public class EnglishWordService {
         return dp[x.length()][y.length()];
     }
 
-    public List<Translation> translate(String word) {
+    public List<EnglishWord> translate(String word) {
         List<EnglishWord> similarWords =  englishWordsRepository.findAll()
                 .stream()
-                .filter(x -> x.getWord().equals(word))
+                .filter(x -> calculateLevenshtein(word, x.getWord()) <= 2)
                 .collect(Collectors.toList());
-        List<Translation> translations = new LinkedList<>();
-        similarWords.forEach(w -> translations.addAll(w.getEquivalents()));
-        return translations;
+        //List<Translation> translations = new LinkedList<>();
+        //similarWords.forEach(w -> translations.addAll(w.getEquivalents()));
+        return similarWords;
     }
 
     public void deleteWordAndTranslations(Long id) {
