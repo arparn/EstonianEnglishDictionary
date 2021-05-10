@@ -1,5 +1,6 @@
 package Telia.EstonianEnglishDictionary.Service;
 
+import Telia.EstonianEnglishDictionary.Algorithm.LevenshteinAlgorithm;
 import Telia.EstonianEnglishDictionary.Model.EnglishWord;
 import Telia.EstonianEnglishDictionary.Model.EstonianWord;
 import Telia.EstonianEnglishDictionary.Model.Translation;
@@ -8,16 +9,13 @@ import Telia.EstonianEnglishDictionary.Repository.TranslationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class EstonianWordService {
 
-    @Autowired
-    private EnglishWordService englishWordService;
+    private static final LevenshteinAlgorithm levenshteinAlgorithm = new LevenshteinAlgorithm();
 
     @Autowired
     private EstonianWordsRepository estonianWordsRepository;
@@ -41,25 +39,34 @@ public class EstonianWordService {
                 translationRepository.save(translationObj);
                 estWord.getEquivalents().add(translationObj);
                 estonianWordsRepository.save(estWord);
-                englishWordService.addWord(translation, word);
             }
             return estWord;
         }
         translationRepository.save(translationObj);
         EstonianWord estWord = new EstonianWord(word, translationObj);
         estonianWordsRepository.save(estWord);
-        englishWordService.addWord(translation, word);
         return estWord;
     }
 
-    public List<Translation> translate(String word) {
-        List<EstonianWord> similarWords =  estonianWordsRepository.findAll()
+    public Map<String, Object> translate(String word) {
+        boolean foundExact = true;
+        List<EstonianWord> suitableWords =  estonianWordsRepository.findAll()
                 .stream()
-                .filter(x -> x.getWord().toLowerCase().equals(word.toLowerCase()))
+                .filter(x -> x.getWord().equals(word))
                 .collect(Collectors.toList());
-        List<Translation> translations = new LinkedList<>();
-        similarWords.forEach(w -> translations.addAll(w.getEquivalents()));
-        return translations;
+        if (suitableWords.size() == 0) {
+            foundExact = false;
+            suitableWords =  estonianWordsRepository.findAll()
+                    .stream()
+                    .filter(x -> levenshteinAlgorithm.calculateLevenshtein(word, x.getWord()) <= 2)
+                    .collect(Collectors.toList());
+        }
+        //List<Translation> translations = new LinkedList<>();
+        //similarWords.forEach(w -> translations.addAll(w.getEquivalents()));
+        Map<String, Object> words = new LinkedHashMap<>();
+        words.put("wordList", suitableWords);
+        words.put("foundExact", foundExact);
+        return words;
     }
 
     public void deleteWordAndTranslations(Long id) {

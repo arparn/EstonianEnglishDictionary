@@ -2,15 +2,20 @@ package Telia.EstonianEnglishDictionary.Contoller;
 
 import Telia.EstonianEnglishDictionary.Model.EstonianWord;
 import Telia.EstonianEnglishDictionary.Model.Translation;
+import Telia.EstonianEnglishDictionary.Service.EnglishWordService;
 import Telia.EstonianEnglishDictionary.Service.EstonianWordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("estonian-english")
 @RestController
 public class EstonianWordsController {
+
+    @Autowired
+    private EnglishWordService englishWordService;
 
     @Autowired
     private EstonianWordService estonianWordService;
@@ -22,12 +27,16 @@ public class EstonianWordsController {
 
     @PostMapping
     public EstonianWord addWord(@RequestParam(value = "word") String word,
-                                @RequestParam(value = "translation") String translation) {
+                                @RequestParam(value = "translation") String translation,
+                                @RequestParam(value = "add") Boolean add) {
+        if (add) {
+            englishWordService.addWord(translation, word);
+        }
         return estonianWordService.addWord(word.toLowerCase(), translation.toLowerCase());
     }
 
     @GetMapping("/translate")
-    public List<Translation> getTranslation(@RequestParam(value = "word") String word) {
+    public Map<String, Object> getTranslation(@RequestParam(value = "word") String word) {
         return estonianWordService.translate(word.toLowerCase());
     }
 
