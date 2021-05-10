@@ -26,3 +26,4 @@ public class Translation {
         this.word = word;
     }
 }
+
