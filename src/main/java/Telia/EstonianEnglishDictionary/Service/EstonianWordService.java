@@ -49,6 +49,10 @@ public class EstonianWordService {
     }
 
     public Map<String, Object> translate(String word) {
+        Map<String, Object> words = new LinkedHashMap<>();
+        if (word.length() < 2) {
+            return null;
+        }
         boolean foundExact = true;
         List<EstonianWord> suitableWords =  estonianWordsRepository.findAll()
                 .stream()
@@ -63,7 +67,6 @@ public class EstonianWordService {
         }
         //List<Translation> translations = new LinkedList<>();
         //similarWords.forEach(w -> translations.addAll(w.getEquivalents()));
-        Map<String, Object> words = new LinkedHashMap<>();
         words.put("wordList", suitableWords);
         words.put("foundExact", foundExact);
         return words;
