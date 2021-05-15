@@ -27,6 +27,9 @@ public class EnglishWordService {
     }
 
     public boolean addWord(String word, String translation) {
+        if (word.equals("") || translation.equals("")) {
+            return false;
+        }
         boolean added = true;
         Translation translationObj = new Translation(translation);
         Optional<EnglishWord> enWordOpt = englishWordsRepository.findAll()
