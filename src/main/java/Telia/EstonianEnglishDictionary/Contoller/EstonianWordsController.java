@@ -40,13 +40,13 @@ public class EstonianWordsController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteWordAndTranslations(@PathVariable Long id) {
-        estonianWordService.deleteWordAndTranslations(id);
+    public List<EstonianWord> deleteWordAndTranslations(@PathVariable Long id) {
+        return estonianWordService.deleteWordAndTranslations(id);
     }
 
     @DeleteMapping("{id}/{translationId}")
-    public void deleteTranslations(@PathVariable Long id,
-                                   @PathVariable Long translationId) {
-        estonianWordService.deleteTranslation(id, translationId);
+    public List<EstonianWord> deleteTranslations(@PathVariable Long id,
+                                                 @PathVariable Long translationId) {
+        return estonianWordService.deleteTranslation(id, translationId);
     }
 }

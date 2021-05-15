@@ -77,13 +77,14 @@ public class EnglishWordService {
         return words;
     }
 
-    public void deleteWordAndTranslations(Long id) {
+    public List<EnglishWord> deleteWordAndTranslations(Long id) {
         if (englishWordsRepository.findById(id).isPresent()) {
             englishWordsRepository.deleteById(id);
         }
+        return englishWordsRepository.findAll();
     }
 
-    public void deleteTranslation(Long id, Long translationId) {
+    public List<EnglishWord> deleteTranslation(Long id, Long translationId) {
         Optional<EnglishWord> enWordObj = englishWordsRepository.findById(id);
         Optional<Translation> translationObj = translationRepository.findById(translationId);
         if (enWordObj.isPresent()) {
@@ -94,5 +95,6 @@ public class EnglishWordService {
                 translationRepository.deleteById(translationId);
             }
         }
+        return englishWordsRepository.findAll();
     }
 }

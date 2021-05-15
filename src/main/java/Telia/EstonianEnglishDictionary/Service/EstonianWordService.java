@@ -78,13 +78,14 @@ public class EstonianWordService {
         return words;
     }
 
-    public void deleteWordAndTranslations(Long id) {
+    public List<EstonianWord> deleteWordAndTranslations(Long id) {
         if (estonianWordsRepository.findById(id).isPresent()) {
             estonianWordsRepository.deleteById(id);
         }
+        return estonianWordsRepository.findAll();
     }
 
-    public void deleteTranslation(Long id, Long translationId) {
+    public List<EstonianWord> deleteTranslation(Long id, Long translationId) {
         Optional<EstonianWord> estWordObj = estonianWordsRepository.findById(id);
         Optional<Translation> translationObj = translationRepository.findById(translationId);
         if (estWordObj.isPresent()) {
@@ -95,5 +96,6 @@ public class EstonianWordService {
                 translationRepository.deleteById(translationId);
             }
         }
+        return estonianWordsRepository.findAll();
     }
 }

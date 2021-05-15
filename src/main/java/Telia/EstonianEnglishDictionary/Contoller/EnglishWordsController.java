@@ -40,13 +40,13 @@ public class EnglishWordsController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteWordAndTranslations(@PathVariable Long id) {
-        englishWordService.deleteWordAndTranslations(id);
+    public List<EnglishWord> deleteWordAndTranslations(@PathVariable Long id) {
+        return englishWordService.deleteWordAndTranslations(id);
     }
 
     @DeleteMapping("{id}/{translationId}")
-    public void deleteTranslations(@PathVariable Long id,
+    public List<EnglishWord> deleteTranslations(@PathVariable Long id,
                                    @PathVariable Long translationId) {
-        englishWordService.deleteTranslation(id, translationId);
+        return englishWordService.deleteTranslation(id, translationId);
     }
 }
