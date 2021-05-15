@@ -49,7 +49,7 @@ public class EnglishWordService {
 
     public Map<String, Object> translate(String word) {
         Map<String, Object> words = new LinkedHashMap<>();
-        if (word.length() < 2) {
+        if (word.length() < 1) {
             return null;
         }
         boolean foundExact = true;

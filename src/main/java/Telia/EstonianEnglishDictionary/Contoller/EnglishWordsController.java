@@ -1,7 +1,6 @@
 package Telia.EstonianEnglishDictionary.Contoller;
 
 import Telia.EstonianEnglishDictionary.Model.EnglishWord;
-import Telia.EstonianEnglishDictionary.Model.Translation;
 import Telia.EstonianEnglishDictionary.Service.EnglishWordService;
 import Telia.EstonianEnglishDictionary.Service.EstonianWordService;
 import org.springframework.beans.factory.annotation.Autowired;
