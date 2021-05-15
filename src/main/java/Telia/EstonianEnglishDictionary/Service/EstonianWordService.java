@@ -27,25 +27,28 @@ public class EstonianWordService {
         return estonianWordsRepository.findAll();
     }
 
-    public EstonianWord addWord(String word, String translation) {
+    public boolean addWord(String word, String translation) {
+        boolean added = true;
         Translation translationObj = new Translation(translation);
         Optional<EstonianWord> estWordOpt = estonianWordsRepository.findAll()
                 .stream()
                 .filter(x -> x.getWord().equals(word))
                 .findFirst();
         if (estWordOpt.isPresent()) {
+            added = false;
             EstonianWord estWord = estWordOpt.get();
             if (estWord.getEquivalents().stream().noneMatch(x -> x.getWord().equals(translation))) {
                 translationRepository.save(translationObj);
                 estWord.getEquivalents().add(translationObj);
                 estonianWordsRepository.save(estWord);
+                added = true;
             }
-            return estWord;
+            return added;
         }
         translationRepository.save(translationObj);
         EstonianWord estWord = new EstonianWord(word, translationObj);
         estonianWordsRepository.save(estWord);
-        return estWord;
+        return added;
     }
 
     public Map<String, Object> translate(String word) {

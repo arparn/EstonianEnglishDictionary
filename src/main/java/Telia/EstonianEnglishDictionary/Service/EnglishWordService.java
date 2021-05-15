@@ -26,25 +26,28 @@ public class EnglishWordService {
         return englishWordsRepository.findAll();
     }
 
-    public EnglishWord addWord(String word, String translation) {
+    public boolean addWord(String word, String translation) {
+        boolean added = true;
         Translation translationObj = new Translation(translation);
         Optional<EnglishWord> enWordOpt = englishWordsRepository.findAll()
                 .stream()
                 .filter(x -> x.getWord().equals(word))
                 .findFirst();
         if (enWordOpt.isPresent()) {
+            added = false;
             EnglishWord enWord = enWordOpt.get();
             if (enWord.getEquivalents().stream().noneMatch(x -> x.getWord().equals(translation))) {
                 translationRepository.save(translationObj);
                 enWord.getEquivalents().add(translationObj);
                 englishWordsRepository.save(enWord);
+                added = true;
             }
-            return enWord;
+            return added;
         }
         translationRepository.save(translationObj);
         EnglishWord enWord = new EnglishWord(word, translationObj);
         englishWordsRepository.save(enWord);
-        return enWord;
+        return added;
     }
 
     public Map<String, Object> translate(String word) {

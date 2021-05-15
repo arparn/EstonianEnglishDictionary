@@ -25,7 +25,7 @@ public class EnglishWordsController {
     }
 
     @PostMapping
-    public EnglishWord addWord(@RequestParam(value = "word") String word,
+    public boolean addWord(@RequestParam(value = "word") String word,
                                @RequestParam(value = "translation") String translation,
                                @RequestParam(value = "add") Boolean add) {
         if (add) {
